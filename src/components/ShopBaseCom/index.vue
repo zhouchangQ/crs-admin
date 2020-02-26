@@ -1,11 +1,14 @@
 <template>
   <div class="board-column">
-    <draggable v-bind="dragOptions" class="board-column-content" :set-data="setData">
+    <draggable v-bind="dragOptions" :list="list" class="board-column-content" :component-data="getComponentData()">
       <div v-for="item in list" :key="item.id" class="board-item">
-        <p class="icon"><svg-icon :icon-class="item.icon" /></p>
-        <p class="limit">{{ item.name }}</p>
-        <p class="limit" v-if="item.limit">{{ item.limit }}/{{ item.limit }}</p>
-        <p class="limit" v-else>不限</p>
+        <div class="place-hoder">组件放置区域</div>
+        <div class="item">
+          <p class="icon"><svg-icon :icon-class="item.icon" /></p>
+          <p class="limit">{{ item.name }}</p>
+          <p class="limit" v-if="item.limit">{{ item.limit }}/{{ item.limit }}</p>
+          <p class="limit" v-else>不限</p>
+        </div>
       </div>
     </draggable>
   </div>
@@ -34,12 +37,14 @@ export default {
         animation: 0,
         sort: false,
         store: false,
+        put: false,
         group: {
           name: 'description',
+          put: false,
           pull: 'clone'
         },
         disabled: false, //是否禁止滑动
-        ghostClass: 'ghost',
+        ghostClass: 'ghostClass',
         dragClass: 'dragClass',
         chosenClass: 'dragClass'
       };
@@ -100,15 +105,39 @@ export default {
     };
   },
   methods: {
-    setData(dataTransfer) {
-      // to avoid Firefox bug
-      // Detail see : https://github.com/RubaXa/Sortable/issues/1012
-      dataTransfer.setData('Text', '');
+    getComponentData() {
+      return {
+        props: {
+          value: '我是模板列表'
+        }
+      };
     }
   }
 };
 </script>
 <style lang="scss" scoped>
+.place-hoder {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  display: none;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+.ghostClass {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  padding-top: 40px;
+  background-color: rgb(164, 238, 189);
+  text-align: center;
+  overflow: hidden;
+  .place-hoder {
+    color: #fff;
+    display: block;
+  }
+}
 .board-column {
   width: 130px;
   height: auto;
@@ -136,6 +165,10 @@ export default {
       background-color: #fff;
       text-align: left;
       box-shadow: 1px 3px 0 rgba(0, 0, 0, 0.2);
+      .item {
+        position: relative;
+        z-index: 2;
+      }
       p {
         margin: 0;
       }

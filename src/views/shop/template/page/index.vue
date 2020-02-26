@@ -1,11 +1,16 @@
 <template>
   <div class="app-container">
     <shop-base-com></shop-base-com>
-    <draggable class="board-content" :value="list" v-bind="dragOptions" @add="datadragEnd($event)">
-      <!-- <draggable class="board-content" v-bind="dragOptions" :set-data="setData" :move="datadragEnd()"> -->
-      <div v-for="item in list" :key="item.id" class="board-item">{{ item }}</div>
+    <draggable class="board-content" :list="list" @change="log" v-bind="dragOptions" :move="checkMove" @add="datadragEnd($event)">
+      <div v-for="(item, index) in list" :key="index" class="board-item">
+        <div v-if="item.icon == 'shop-img'">
+          <img src="@/assets/template/bg-img.png" />
+        </div>
+        <div v-if="item.icon == 'shop-banner'">
+          <img src="@/assets/template/bg-banner.png" />
+        </div>
+      </div>
     </draggable>
-    <div>{{ list }}</div>
   </div>
 </template>
 
@@ -27,8 +32,9 @@ export default {
         sort: true,
         store: true,
         group: 'description',
+        ghostClass: 'ghostClass',
         dragClass: 'dragClass',
-        chosenClass: 'dragClass'
+        chosenClass: 'chosenClass'
       };
     }
     // list: {
@@ -41,23 +47,23 @@ export default {
     // }
   },
   methods: {
+    checkMove: function(evt) {
+      console.log('evt.name======' + evt.draggedContext.element.name);
+      return evt.draggedContext.element.name !== 'apple';
+    },
     setData(dataTransfer) {
       // to avoid Firefox bug
       // Detail see : https://github.com/RubaXa/Sortable/issues/1012
       dataTransfer.setData('Text', '');
     },
+    log: function(evt) {
+      window.console.log(evt);
+    },
     datadragEnd(e) {
-      var str = '';
-      for (var item in e) {
-        str += item + ':' + e[item] + '\n';
-      }
-
       // console.log('改变了=======' + e.newIndex);
-      console.log('改变了=======' + str);
+      // console.log('改变了=======' + e.relatedContext.element.name);
       // this.$store.dispatch('DragInfo/upDateList', [2]);
-      e.item = '';
-      e.to = '';
-      console.log('this.list======' + this.list);
+      console.log(this.list);
     }
   },
   mounted() {}
@@ -72,5 +78,11 @@ export default {
   height: 300px;
   width: 400px;
   background-color: #efeff4;
+}
+.board-item {
+  position: relative;
+  img {
+    width: 100%;
+  }
 }
 </style>
