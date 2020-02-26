@@ -1,0 +1,8 @@
+{
+  "printWidth": 200,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
+  "endOfLine": "auto",
+  "htmlWhitespaceSensitivity": "ignore"
+}
