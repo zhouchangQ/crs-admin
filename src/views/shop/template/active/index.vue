@@ -1,67 +1,16 @@
 <template>
-  <div class="row">
-    <div class="col-3">
-      <h3>Draggable 1</h3>
-      <draggable class="list-group" :list="list1" group="people">
-        <div class="list-group-item" v-for="(element, index) in list1" :key="element.name">{{ element.name }} {{ index }}</div>
-      </draggable>
-    </div>
-
-    <div class="col-3">
-      <h3>Draggable 2</h3>
-      <draggable class="list-group" :list="list2" group="people" @change="log" @add="datadragEnd($event)">
-        <div class="list-group-item" v-for="(element, index) in list2" :key="element.name">{{ element.name }} {{ index }}</div>
-      </draggable>
-    </div>
-    <div>{{ list1 }}</div>
-    <div>{{ list2 }}</div>
-  </div>
+  <div class="app-container">活动模板</div>
 </template>
-<script>
-import draggable from 'vuedraggable';
 
+<script>
 export default {
-  name: 'two-lists',
-  display: 'Two Lists',
-  order: 1,
-  components: {
-    draggable
-  },
   data() {
-    return {
-      list1: [
-        { name: 'John', id: 1 },
-        { name: 'Joao', id: 2 },
-        { name: 'Jean', id: 3 },
-        { name: 'Gerard', id: 4 }
-      ],
-      list2: [
-        { name: 'Juan', id: 5 },
-        { name: 'Edgard', id: 6 },
-        { name: 'Johnson', id: 7 }
-      ]
-    };
+    return {};
   },
-  methods: {
-    add: function() {
-      this.list.push({ name: 'Juan' });
-    },
-    replace: function() {
-      this.list = [{ name: 'Edgard' }];
-    },
-    clone: function(el) {
-      return {
-        name: el.name + ' cloned'
-      };
-    },
-    log: function(evt) {
-      window.console.log(evt);
-    },
-    datadragEnd(e) {
-      // this.$store.dispatch('DragInfo/upDateList', [2]);
-      this.list2[e.newIndex] = '哈哈哈哈';
-      console.log(this.list2);
-    }
-  }
+  components: {},
+  methods: {},
+  mounted() {}
 };
 </script>
+
+<style lang="scss" scoped></style>

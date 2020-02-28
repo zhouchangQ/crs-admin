@@ -1,12 +1,13 @@
 <template>
   <div class="board-column">
-    <draggable v-bind="dragOptions" :list="list" class="board-column-content" :component-data="getComponentData()">
-      <div v-for="item in list" :key="item.id" class="board-item">
-        <div class="place-hoder">组件放置区域</div>
+    <draggable v-bind="dragOptions" :list="list" class="board-column-content">
+      <div v-for="item in list" :key="item.id" :class="[{ 'max-style': isMax(item) }, 'board-item']">
+        <div class="place-hoder" v-if="!isMax(item)">组件放置区域</div>
+        <div class="place-hoder" v-else>该组件已达到上限</div>
         <div class="item">
           <p class="icon"><svg-icon :icon-class="item.icon" /></p>
           <p class="limit">{{ item.name }}</p>
-          <p class="limit" v-if="item.limit">{{ item.limit }}/{{ item.limit }}</p>
+          <p class="limit" v-if="item.limit">{{ item.usecont }}/{{ item.limit }}</p>
           <p class="limit" v-else>不限</p>
         </div>
       </div>
@@ -16,7 +17,6 @@
 
 <script>
 import draggable from 'vuedraggable';
-
 export default {
   name: 'DragArea',
   components: {
@@ -34,10 +34,10 @@ export default {
     // 滑动卡片配置
     dragOptions() {
       return {
-        animation: 0,
-        sort: false,
+        animation: 0, //动画
+        sort: false, //是否允许排序
         store: false,
-        put: false,
+        put: false, //插入
         group: {
           name: 'description',
           put: false,
@@ -48,71 +48,23 @@ export default {
         dragClass: 'dragClass',
         chosenClass: 'dragClass'
       };
+    },
+    list: {
+      get() {
+        return this.$store.state.ShopSetup.baseComList;
+      }
+    },
+    isMax() {
+      //判断单个组件数量是否达到上线
+      return item => {
+        return item.limit && item.usecont >= item.limit;
+      };
     }
   },
   data() {
-    return {
-      list: [
-        {
-          id: 0,
-          limit: null,
-          icon: 'shop-banner',
-          name: '轮播'
-        },
-        {
-          id: 1,
-          limit: null,
-          icon: 'shop-img',
-          name: '图片'
-        },
-        {
-          id: 2,
-          limit: null,
-          icon: 'shop-coupon',
-          name: '优惠券'
-        },
-        {
-          id: 3,
-          limit: 1,
-          icon: 'shop-search',
-          name: '搜索'
-        },
-        {
-          id: 4,
-          limit: 1,
-          icon: 'shop-new',
-          name: '新人购'
-        },
-        {
-          id: 5,
-          limit: 1,
-          icon: 'shop-time',
-          name: '限时购'
-        },
-        {
-          id: 6,
-          limit: 1,
-          icon: 'shop-like',
-          name: '引导关注'
-        },
-        {
-          id: 7,
-          limit: 1,
-          icon: 'shop-zhiyin',
-          name: '社群导流'
-        }
-      ]
-    };
+    return {};
   },
-  methods: {
-    getComponentData() {
-      return {
-        props: {
-          value: '我是模板列表'
-        }
-      };
-    }
-  }
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>
@@ -137,6 +89,9 @@ export default {
     color: #fff;
     display: block;
   }
+}
+.ghostClass.max-style {
+  background-color: red;
 }
 .board-column {
   width: 130px;

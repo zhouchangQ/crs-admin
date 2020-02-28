@@ -5,7 +5,7 @@ import app from './modules/app';
 import settings from './modules/settings';
 import Steep from './modules/VideoSteep';
 import User from './modules/UserInfo';
-import DragInfo from './modules/DragInfo';
+import ShopSetup from './modules/ShopSetup';
 
 Vue.use(Vuex);
 
@@ -15,7 +15,7 @@ const store = new Vuex.Store({
     settings,
     STEEP: Steep,
     USER: User,
-    DragInfo
+    ShopSetup
   },
   getters
 });

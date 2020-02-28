@@ -11,7 +11,9 @@ body {
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
-
+.scrollbar-wrapper {
+  overflow-x: hidden !important;
+}
 label {
   font-weight: 700;
 }
@@ -68,3 +70,5 @@ div:focus {
   padding: 20px;
   background-color: #fff;
 }
+/* 初始化标签在所有浏览器中的margin、padding值 */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button,img{padding: 0; margin: 0;}
