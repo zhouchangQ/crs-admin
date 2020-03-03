@@ -2,7 +2,7 @@
   <div class="board-column">
     <draggable class="phone-content" :list="shopEditList" v-bind="dragOptions" :move="checkMove" @add="datadragEnd" @end="endListenter">
       <div v-for="(item, index) in shopEditList" :key="index" :class="[{ 'select-style': item.selected }, 'board-item']" @click="handleSelectItem(item, index)">
-        <div class="popper-right" v-if="item.selected" @click="handleDelete(item, index)">
+        <div class="popper-right" v-if="item.selected" @click.stop="handleDelete(item, index)">
           <p class="delete">
             <svg-icon icon-class="delete" />
           </p>
@@ -10,15 +10,7 @@
         <div class="popper-right" v-else>
           <p>{{ item.name }}</p>
         </div>
-        <div v-if="item.icon == 'shop-img'">
-          <img src="@/assets/template/bg-img.png" />
-        </div>
-        <div v-else-if="item.icon == 'shop-banner'">
-          <img src="@/assets/template/bg-banner.png" />
-        </div>
-        <div v-else>
-          {{ item.name }}
-        </div>
+        <component :is="item.key" :id="item.id"></component>
       </div>
     </draggable>
   </div>
@@ -50,9 +42,13 @@ export default {
         chosenClass: 'chosenClass'
       };
     },
+    //编辑页组件列表
     shopEditList: {
       get() {
         return this.$store.state.ShopSetup.shopEditList;
+      },
+      set(val) {
+        this.upStore('upDateShopEditList', val);
       }
     }
   },
@@ -60,6 +56,16 @@ export default {
     return {
       show_ic: true
     };
+  },
+  beforeCreate: function() {
+    //动态加载子view组件
+    this.$store.state.ShopSetup.baseComList.map(item => {
+      this.$options.components[item.key] = item.viewCom().default;
+    });
+  },
+  created() {},
+  render: createElement => {
+    return createElement(this.vueName);
   },
   methods: {
     //移动结束自动选择当前元素
@@ -71,7 +77,7 @@ export default {
       });
       newList[e.newIndex].selected = true;
       this.upStore('upDateShopEditList', newList);
-      this.upStore('upDateShopEditId', newList[e.newIndex].id);
+      this.upStore('upDateShopEditing', { key: newList[e.newIndex].key, id: newList[e.newIndex].id });
     },
     //移动监听
     checkMove: function(evt) {
@@ -79,6 +85,10 @@ export default {
     },
     //添加元素监听
     datadragEnd(e) {
+      //分配每个组件id
+      let newList = JSON.parse(JSON.stringify(this.shopEditList));
+      newList[e.newIndex].id = new Date().getTime();
+      this.shopEditList = newList;
       // 如果该拖动元素已达上线，完成后随之移除，否则增加组件数量
       const oldItem = this.$store.state.ShopSetup.baseComList[e.oldIndex];
       if (oldItem.limit && oldItem.usecont >= oldItem.limit) {
@@ -97,12 +107,20 @@ export default {
       });
       newList[index].selected = true;
       this.upStore('upDateShopEditList', newList);
-      this.upStore('upDateShopEditId', item.id);
+      this.upStore('upDateShopEditing', { id: newList[index].id, key: newList[index].key });
     },
     // 删除元素
     handleDelete(item, index) {
       this.shopEditList.splice(index, 1);
       this.upStore('upDateShopEditList', this.shopEditList);
+      //如果当前元素有数量限制，基础组件数量减一
+      this.$store.state.ShopSetup.baseComList.map(item2 => {
+        if (item.key == item2.key && item2['usecont']) {
+          this.upStore('upDateBaseComList', item2['usecont']--);
+        }
+      });
+      //触发删除操作，置空正在编辑元素
+      this.upStore('upDateDelTemplate', { id: item.id, key: item.key });
     },
     // 更新store
     upStore(name, data) {
@@ -121,19 +139,23 @@ p {
   background: #eff7ff;
   border-radius: 5px;
 }
+// 右侧气泡样式
 .popper-right {
   text-align: left;
-  .delete {
-    position: absolute;
-    box-shadow: rgba(0, 0, 0, 0.3);
-    right: -60px;
-  }
+  color: #333;
+  white-space: nowrap;
+  position: relative;
+  left: 390px;
   p {
+    cursor: pointer;
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
     position: absolute;
-    padding: 10px 20px;
-    box-shadow: rgba(0, 0, 0, 0.3);
-    background-color: #666;
-    right: -80px;
+    padding: 0 15px;
+    border-radius: 3px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
   }
 }
 </style>

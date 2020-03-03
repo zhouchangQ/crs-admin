@@ -9,7 +9,7 @@ module.exports = {
     shop_banner: null,
     shop_img: null,
     shop_coupon: null,
-    shop_search: 1,
+    shop_search: 2,
     shop_new: 1,
     shop_time: 1,
     shop_like: 1,

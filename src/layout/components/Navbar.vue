@@ -34,8 +34,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import Screenfull from '@/components/Screenfull';
-import Breadcrumb from '@/components/Breadcrumb';
-import Hamburger from '@/components/Hamburger';
+import Breadcrumb from '@/components/Public/Breadcrumb';
+import Hamburger from '@/components/Public/Hamburger';
 
 export default {
   components: {

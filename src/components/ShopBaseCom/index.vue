@@ -1,7 +1,7 @@
 <template>
   <div class="board-column">
     <draggable v-bind="dragOptions" :list="list" class="board-column-content">
-      <div v-for="item in list" :key="item.id" :class="[{ 'max-style': isMax(item) }, 'board-item']">
+      <div v-for="item in list" :key="item.key" :class="[{ 'max-style': isMax(item) }, 'board-item']">
         <div class="place-hoder" v-if="!isMax(item)">组件放置区域</div>
         <div class="place-hoder" v-else>该组件已达到上限</div>
         <div class="item">
